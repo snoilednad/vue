@@ -1,32 +1,22 @@
 /* @flow */
-
+/**
+ *  功能：创建VNode
+ */
 import config from '../config'
 import VNode, { createEmptyVNode } from './vnode'
 import { createComponent } from './create-component'
 import { traverse } from '../observer/traverse'
+import { warn, isDef, isUndef, isTrue, isObject, isPrimitive, resolveAsset } from '../util/index'
+import { normalizeChildren, simpleNormalizeChildren } from './helpers/index'
 
-import {
-  warn,
-  isDef,
-  isUndef,
-  isTrue,
-  isObject,
-  isPrimitive,
-  resolveAsset
-} from '../util/index'
-
-import {
-  normalizeChildren,
-  simpleNormalizeChildren
-} from './helpers/index'
-
+// ?
 const SIMPLE_NORMALIZE = 1
 const ALWAYS_NORMALIZE = 2
 
 // wrapper function for providing a more flexible interface
 // without getting yelled at by flow
 export function createElement (
-  context: Component,
+  context: Component, // VNode的上下文环境
   tag: any,
   data: any,
   children: any,
@@ -48,8 +38,8 @@ export function _createElement (
   context: Component,
   tag?: string | Class<Component> | Function | Object,
   data?: VNodeData,
-  children?: any,
-  normalizationType?: number
+  children?: any, // 子节点
+  normalizationType?: number // 规范化类型
 ): VNode | Array<VNode> {
   if (isDef(data) && isDef((data: any).__ob__)) {
     process.env.NODE_ENV !== 'production' && warn(
@@ -87,11 +77,13 @@ export function _createElement (
     data.scopedSlots = { default: children[0] }
     children.length = 0
   }
+  // 根据不同类型来规范children数据结构
   if (normalizationType === ALWAYS_NORMALIZE) {
     children = normalizeChildren(children)
   } else if (normalizationType === SIMPLE_NORMALIZE) {
     children = simpleNormalizeChildren(children)
   }
+  // vnode的创建
   let vnode, ns
   if (typeof tag === 'string') {
     let Ctor

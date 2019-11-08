@@ -31,7 +31,7 @@ Vue.prototype.$mount = function (
 
   const options = this.$options
   // resolve template/el and convert to render function
-  if (!options.render) {
+  if (!options.render) { // 未配置render，说明render若存在，template和el配置则无效
     let template = options.template
     if (template) {
       if (typeof template === 'string') {
