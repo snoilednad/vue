@@ -109,11 +109,11 @@ function initProps (vm: Component, propsOptions: Object) {
   toggleObserving(true)
 }
 
+// data数据响应式
 function initData (vm: Component) {
   let data = vm.$options.data
-  data = vm._data = typeof data === 'function'
-    ? getData(data, vm)
-    : data || {}
+  // data类型Object | Function
+  data = vm._data = (typeof data === 'function' ? getData(data, vm) : data || {})
   if (!isPlainObject(data)) {
     data = {}
     process.env.NODE_ENV !== 'production' && warn(
@@ -318,8 +318,7 @@ function createWatcher (
 
 export function stateMixin (Vue: Class<Component>) {
   // flow somehow has problems with directly declared definition object
-  // when using Object.defineProperty, so we have to procedurally build up
-  // the object here.
+  // when using Object.defineProperty, so we have to procedurally build up the object here.
   const dataDef = {}
   dataDef.get = function () { return this._data }
   const propsDef = {}

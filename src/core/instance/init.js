@@ -16,9 +16,7 @@ let uid = 0
 export function initMixin (Vue: Class<Component>) {
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
-    // a uid
     vm._uid = uid++
-
     let startTag, endTag
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -50,9 +48,9 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
-    initLifecycle(vm) // 声明周期初始化
-    initEvents(vm) // 事件初始化
-    initRender(vm)  // render函数初始化
+    initLifecycle(vm)
+    initEvents(vm)
+    initRender(vm) // $attrs、$listeners
     callHook(vm, 'beforeCreate') // 暴露beforeCreate钩子
     initInjections(vm) // resolve injections before data/props
     initState(vm)
@@ -66,6 +64,7 @@ export function initMixin (Vue: Class<Component>) {
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
 
+    // 配置el，会自动$mount
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }

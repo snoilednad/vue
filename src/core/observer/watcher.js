@@ -1,19 +1,9 @@
 /* @flow */
 
-import {
-  warn,
-  remove,
-  isObject,
-  parsePath,
-  _Set as Set,
-  handleError,
-  noop
-} from '../util/index'
-
+import { warn, remove, isObject, parsePath, _Set as Set, handleError, noop } from '../util/index'
 import { traverse } from './traverse'
 import { queueWatcher } from './scheduler'
 import Dep, { pushTarget, popTarget } from './dep'
-
 import type { SimpleSet } from '../util/index'
 
 let uid = 0
@@ -72,9 +62,7 @@ export default class Watcher {
     this.newDeps = []
     this.depIds = new Set()
     this.newDepIds = new Set()
-    this.expression = process.env.NODE_ENV !== 'production'
-      ? expOrFn.toString()
-      : ''
+    this.expression = process.env.NODE_ENV !== 'production' ? expOrFn.toString() : ''
     // parse expression for getter
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn
@@ -90,9 +78,7 @@ export default class Watcher {
         )
       }
     }
-    this.value = this.lazy
-      ? undefined
-      : this.get()
+    this.value = this.lazy ? undefined : this.get()
   }
 
   /**

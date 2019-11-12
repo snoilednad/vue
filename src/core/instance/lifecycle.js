@@ -29,9 +29,9 @@ export function setActiveInstance(vm: Component) {
   }
 }
 
+// 初始化
 export function initLifecycle (vm: Component) {
   const options = vm.$options
-
   // locate first non-abstract parent
   let parent = options.parent
   if (parent && !options.abstract) {
@@ -47,6 +47,7 @@ export function initLifecycle (vm: Component) {
   vm.$children = []
   vm.$refs = {}
 
+  // _私有变量
   vm._watcher = null
   vm._inactive = null
   vm._directInactive = false
@@ -138,6 +139,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
   }
 }
 
+// 执行渲染和更新 VNode -> 真实DOM
 export function mountComponent (
   vm: Component,
   el: ?Element,
@@ -333,6 +335,7 @@ export function deactivateChildComponent (vm: Component, direct?: boolean) {
   }
 }
 
+// 回调钩子定义方法
 export function callHook (vm: Component, hook: string) {
   // #7573 disable dep collection when invoking lifecycle hooks
   pushTarget()

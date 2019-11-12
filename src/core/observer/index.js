@@ -34,6 +34,7 @@ export function toggleObserving (value: boolean) {
  * object's property keys into getter/setters that
  * collect dependencies and dispatch updates.
  */
+// 根据数据类型执行对应的响应化操作
 export class Observer {
   value: any;
   dep: Dep;
@@ -44,7 +45,7 @@ export class Observer {
     this.dep = new Dep()
     this.vmCount = 0
     def(value, '__ob__', this)
-    if (Array.isArray(value)) {
+    if (Array.isArray(value)) { // 数组
       if (hasProto) {
         protoAugment(value, arrayMethods)
       } else {
@@ -107,6 +108,7 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
  * returns the new observer if successfully observed,
  * or the existing observer if the value already has one.
  */
+// 仅接受对象或VNode，返回Observe实例
 export function observe (value: any, asRootData: ?boolean): Observer | void {
   if (!isObject(value) || value instanceof VNode) {
     return
@@ -157,7 +159,7 @@ export function defineReactive (
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
-    get: function reactiveGetter () {
+    get: function reactiveGetter () { // 负责添加依赖
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
         dep.depend()
@@ -170,7 +172,7 @@ export function defineReactive (
       }
       return value
     },
-    set: function reactiveSetter (newVal) {
+    set: function reactiveSetter (newVal) { // 负责通知更新
       const value = getter ? getter.call(obj) : val
       /* eslint-disable no-self-compare */
       if (newVal === value || (newVal !== newVal && value !== value)) {
@@ -188,7 +190,7 @@ export function defineReactive (
         val = newVal
       }
       childOb = !shallow && observe(newVal)
-      dep.notify()
+      dep.notify() // 通知更新
     }
   })
 }

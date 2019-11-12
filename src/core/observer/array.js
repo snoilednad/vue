@@ -8,6 +8,7 @@ import { def } from '../util/index'
 const arrayProto = Array.prototype
 export const arrayMethods = Object.create(arrayProto)
 
+// 对于数组，通过这7个方法进行依赖收集
 const methodsToPatch = [
   'push',
   'pop',

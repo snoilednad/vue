@@ -713,6 +713,7 @@
    * A dep is an observable that can have multiple
    * directives subscribing to it.
    */
+  // 负责管理一组Watcher
   var Dep = function Dep () {
     this.id = uid++;
     this.subs = [];
@@ -860,6 +861,7 @@
   var arrayProto = Array.prototype;
   var arrayMethods = Object.create(arrayProto);
 
+  // 对于数组，通过这7个方法进行依赖收集
   var methodsToPatch = [
     'push',
     'pop',
@@ -919,12 +921,13 @@
    * object's property keys into getter/setters that
    * collect dependencies and dispatch updates.
    */
+  // 根据数据类型执行对应的响应化操作
   var Observer = function Observer (value) {
     this.value = value;
     this.dep = new Dep();
     this.vmCount = 0;
     def(value, '__ob__', this);
-    if (Array.isArray(value)) {
+    if (Array.isArray(value)) { // 数组
       if (hasProto) {
         protoAugment(value, arrayMethods);
       } else {
@@ -986,6 +989,7 @@
    * returns the new observer if successfully observed,
    * or the existing observer if the value already has one.
    */
+  // 仅接受对象或VNode，返回Observe实例
   function observe (value, asRootData) {
     if (!isObject(value) || value instanceof VNode) {
       return
@@ -1036,7 +1040,7 @@
     Object.defineProperty(obj, key, {
       enumerable: true,
       configurable: true,
-      get: function reactiveGetter () {
+      get: function reactiveGetter () { // 负责添加依赖
         var value = getter ? getter.call(obj) : val;
         if (Dep.target) {
           dep.depend();
@@ -1049,7 +1053,7 @@
         }
         return value
       },
-      set: function reactiveSetter (newVal) {
+      set: function reactiveSetter (newVal) { // 负责通知更新
         var value = getter ? getter.call(obj) : val;
         /* eslint-disable no-self-compare */
         if (newVal === value || (newVal !== newVal && value !== value)) {
@@ -1067,7 +1071,7 @@
           val = newVal;
         }
         childOb = !shallow && observe(newVal);
-        dep.notify();
+        dep.notify(); // 通知更新
       }
     });
   }
@@ -3330,13 +3334,14 @@
 
   /*  */
 
+  // ?
   var SIMPLE_NORMALIZE = 1;
   var ALWAYS_NORMALIZE = 2;
 
   // wrapper function for providing a more flexible interface
   // without getting yelled at by flow
   function createElement (
-    context,
+    context, // VNode的上下文环境
     tag,
     data,
     children,
@@ -3358,8 +3363,8 @@
     context,
     tag,
     data,
-    children,
-    normalizationType
+    children, // 子节点
+    normalizationType // 规范化类型
   ) {
     if (isDef(data) && isDef((data).__ob__)) {
        warn(
@@ -3397,11 +3402,13 @@
       data.scopedSlots = { default: children[0] };
       children.length = 0;
     }
+    // 根据不同类型来规范children数据结构
     if (normalizationType === ALWAYS_NORMALIZE) {
       children = normalizeChildren(children);
     } else if (normalizationType === SIMPLE_NORMALIZE) {
       children = simpleNormalizeChildren(children);
     }
+    // vnode的创建
     var vnode, ns;
     if (typeof tag === 'string') {
       var Ctor;
@@ -3758,6 +3765,7 @@
     vm._events = Object.create(null);
     vm._hasHookEvent = false;
     // init parent attached events
+    // 在父组件中定义自身的监听，谁触发，必定谁监听
     var listeners = vm.$options._parentListeners;
     if (listeners) {
       updateComponentListeners(vm, listeners);
@@ -3900,9 +3908,9 @@
     }
   }
 
+  // 初始化
   function initLifecycle (vm) {
     var options = vm.$options;
-
     // locate first non-abstract parent
     var parent = options.parent;
     if (parent && !options.abstract) {
@@ -3918,6 +3926,7 @@
     vm.$children = [];
     vm.$refs = {};
 
+    // _私有变量
     vm._watcher = null;
     vm._inactive = null;
     vm._directInactive = false;
@@ -4009,6 +4018,7 @@
     };
   }
 
+  // 执行渲染和更新 VNode -> 真实DOM
   function mountComponent (
     vm,
     el,
@@ -4204,6 +4214,7 @@
     }
   }
 
+  // 回调钩子定义方法
   function callHook (vm, hook) {
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
@@ -4402,7 +4413,6 @@
   /*  */
 
 
-
   var uid$1 = 0;
 
   /**
@@ -4440,8 +4450,7 @@
     this.newDeps = [];
     this.depIds = new _Set();
     this.newDepIds = new _Set();
-    this.expression =  expOrFn.toString()
-      ;
+    this.expression =  expOrFn.toString() ;
     // parse expression for getter
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn;
@@ -4457,9 +4466,7 @@
         );
       }
     }
-    this.value = this.lazy
-      ? undefined
-      : this.get();
+    this.value = this.lazy ? undefined : this.get();
   };
 
   /**
@@ -4691,11 +4698,11 @@
     toggleObserving(true);
   }
 
+  // data数据响应式
   function initData (vm) {
     var data = vm.$options.data;
-    data = vm._data = typeof data === 'function'
-      ? getData(data, vm)
-      : data || {};
+    // data类型Object | Function
+    data = vm._data = (typeof data === 'function' ? getData(data, vm) : data || {});
     if (!isPlainObject(data)) {
       data = {};
        warn(
@@ -4900,8 +4907,7 @@
 
   function stateMixin (Vue) {
     // flow somehow has problems with directly declared definition object
-    // when using Object.defineProperty, so we have to procedurally build up
-    // the object here.
+    // when using Object.defineProperty, so we have to procedurally build up the object here.
     var dataDef = {};
     dataDef.get = function () { return this._data };
     var propsDef = {};
@@ -4953,12 +4959,11 @@
 
   var uid$2 = 0;
 
+  // 初始化函数的实现
   function initMixin (Vue) {
     Vue.prototype._init = function (options) {
       var vm = this;
-      // a uid
       vm._uid = uid$2++;
-
       var startTag, endTag;
       /* istanbul ignore if */
       if ( config.performance && mark) {
@@ -4990,8 +4995,8 @@
       vm._self = vm;
       initLifecycle(vm);
       initEvents(vm);
-      initRender(vm);
-      callHook(vm, 'beforeCreate');
+      initRender(vm); // $attrs、$listeners
+      callHook(vm, 'beforeCreate'); // 暴露beforeCreate钩子
       initInjections(vm); // resolve injections before data/props
       initState(vm);
       initProvide(vm); // resolve provide after data/props
@@ -5004,6 +5009,7 @@
         measure(("vue " + (vm._name) + " init"), startTag, endTag);
       }
 
+      // 配置el，会自动$mount
       if (vm.$options.el) {
         vm.$mount(vm.$options.el);
       }
@@ -5066,15 +5072,15 @@
     return modified
   }
 
+  // Vue构造函数定义
   function Vue (options) {
-    if (
-      !(this instanceof Vue)
-    ) {
+    if ( !(this instanceof Vue)) {
       warn('Vue is a constructor and should be called with the `new` keyword');
     }
     this._init(options);
   }
 
+  // 全局API定义
   initMixin(Vue);
   stateMixin(Vue);
   eventsMixin(Vue);
@@ -5422,6 +5428,7 @@
     initAssetRegisters(Vue);
   }
 
+  // 定义全局API
   initGlobalAPI(Vue);
 
   Object.defineProperty(Vue.prototype, '$isServer', {
@@ -9034,9 +9041,11 @@
   extend(Vue.options.components, platformComponents);
 
   // install platform patch function
+  // 实现了patch方法
   Vue.prototype.__patch__ = inBrowser ? patch : noop;
 
   // public mount method
+  // 定义了$mount
   Vue.prototype.$mount = function (
     el,
     hydrating
@@ -11898,7 +11907,7 @@
 
     var options = this.$options;
     // resolve template/el and convert to render function
-    if (!options.render) {
+    if (!options.render) { // 未配置render，说明render若存在，template和el配置则无效
       var template = options.template;
       if (template) {
         if (typeof template === 'string') {
