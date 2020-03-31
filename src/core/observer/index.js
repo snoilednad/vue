@@ -107,9 +107,11 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
  * Attempt to create an observer instance for a value,
  * returns the new observer if successfully observed,
  * or the existing observer if the value already has one.
+ * 创建一个观察者对象为一个值，如果创建成功或已存在则返回一个新的观察者
+ *
  */
-// 仅接受对象或VNode，返回Observe实例
 export function observe (value: any, asRootData: ?boolean): Observer | void {
+  // 如果不是对象或是虚拟DOM，则返回
   if (!isObject(value) || value instanceof VNode) {
     return
   }

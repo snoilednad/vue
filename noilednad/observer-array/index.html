@@ -7,8 +7,12 @@
 <body>
   <div id="app">
     <ul>
-      <li :key="week.id" v-for="week in weeks">
-        {{week.name + week.id}}
+      <li :key="week.wid" v-for="week in weeks">
+        {{week.wid + '-' +  week.name}}
+      </li>
+      <div @click="handleClick">改变数组</div>
+      <li :key="day" v-for="day in days">
+        {{day}}
       </li>
     </ul>
   </div>
@@ -18,22 +22,30 @@
       el: '#app',
       data: {
         weeks: [],
-      },
-      methods: {
+        days: [100, 200, 300]
       },
       created () {
         this.weeks = [
-          {id: 1, name: '周一'},
-          {id: 2, name: '周二'},
-          {id: 3, name: '周三'},
-          {id: 4, name: '周四'},
-          {id: 5, name: '周五'},
-          {id: 6, name: '周六'},
-          {id: 7, name: '周日'}
+          {wid: 1, name: '周一'},
+          {wid: 2, name: '周二'},
+          {wid: 3, name: '周三'},
+          {wid: 4, name: '周四'},
+          {wid: 5, name: '周五'},
+          {wid: 6, name: '周六'},
+          {wid: 7, name: '周日'}
         ]
-        setTimeout(() => {
-            this.weeks[6].name = 'Sunday'
-        }, 1000)
+      },
+      methods: {
+        handleClick () {
+          this.days.forEach((day, index) => {
+            if (index === 2) {
+              day = 800
+              this.days.splice(index, 1, day)
+            }
+          })
+          // 值改变了，但并没有触发视图渲染
+          console.log(this.days, 'days')
+        }
       }
     })
   </script>

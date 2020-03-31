@@ -45,6 +45,12 @@ export function proxy (target: Object, sourceKey: string, key: string) {
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
+/**
+ * 初始化响应化数据，包括：
+ * props、data、computed和watch
+ * 另：methods
+ * 
+ */
 export function initState (vm: Component) {
   vm._watchers = []
   const opts = vm.$options
@@ -53,6 +59,7 @@ export function initState (vm: Component) {
   if (opts.data) {
     initData(vm)
   } else {
+    // 如果未定义data
     observe(vm._data = {}, true /* asRootData */)
   }
   if (opts.computed) initComputed(vm, opts.computed)
