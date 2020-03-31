@@ -8,15 +8,15 @@ import { def } from '../util/index'
 const arrayProto = Array.prototype
 export const arrayMethods = Object.create(arrayProto)
 
-// 对于数组，通过这7个方法进行依赖收集
+// 对于数组，通过这7个方法进行依赖收集,俗称"7君子哈哈"
 const methodsToPatch = [
-  'push',
-  'pop',
-  'shift',
-  'unshift',
-  'splice',
-  'sort',
-  'reverse'
+  'push', // 从数组的尾部插入
+  'pop', // 从数组尾部删除
+  'shift', // 从数组头部删除
+  'unshift', // 从数组头部插入
+  'splice', // 数组元素替换
+  'sort', // 数组元素排序
+  'reverse' // 数组元素反转
 ]
 
 /**

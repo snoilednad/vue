@@ -6,16 +6,107 @@
 </head>
 <body>
   <div id="app">
-    <div>{{foo}}</div>
+    <div class="custom-color">{{foo}}</div>
+    <ul>
+      <li :key="week.id" v-for="week in weeks">
+        {{week.name}}
+      </li>
+    </ul>
+    <!--测试父子组件-->
+    <parent-component></parent-component>
+    <!--测试emit-->
+    <select @change="handleClick">
+      <option
+        :key="option.id"
+        v-for="option in weeks"
+        :value="option.id">
+        {{option.name}}
+      </option>
+    </select>
   </div>
   <script src="../../dist/vue.js"></script>
   <script>
     new Vue({
+      components: {
+        'ParentComponent': {
+          components: {
+            'ChildComponent': {
+              beforeCreate () {
+                this.parentNote = this.$attrs.note
+              },
+              created () {
+                console.log(this.parentNode, '00011')
+                // this.parentNote = this.$attrs.note
+              },
+              data () {
+                return {
+                  parentNote: ''
+                }
+              },
+              /**
+               * template仅支持字符串，如：this.parentNote无法获取值
+               * 支持模板或插槽
+               */
+              // template: `<div>receive parent: ${this.parentNote}</div>`,
+              render (createElement) {
+                return createElement('div', `receive parent: ${this.parentNote}`)
+              }
+            }
+          },
+          data() {
+            return {
+              note: 'parent component'
+            }
+          },
+          template: `<child-component :note="note"></child-component>`
+        }
+      },
       el: '#app',
+      beforeCreate () {
+        this.foo = '12345'
+      },
       data: {
-        foo: '123'
+        foo: '123',
+        weeks: [
+          {id: 1, name: '周一'},
+          {id: 2, name: '周二'},
+          {id: 3, name: '周三'},
+          {id: 4, name: '周四'},
+          {id: 5, name: '周五'},
+          {id: 6, name: '周六'},
+          {id: 7, name: '周日'},
+        ],
+        $eventBus:  ''
+      },
+      methods: {
+        handleClick (e) { // 模拟事件
+          let _val = parseInt(e.target.value)
+          if (_val % 2 === 0) {
+            this.$eventBus.$emit('select-change')
+          } else {
+            this.$eventBus.$off('select-change')
+          }
+        }
+      },
+      created () {
+        // setTimeout(() => {
+          // this.weeks.shift()
+        // }, 1000)
+        this.$eventBus = new Vue()
+        /**
+         * 在同一组件中，若$off事件后，在没有$on初始化，也就是对应的event: null，
+         * 则再次$emit时监听事件函数无法执行
+         */
+        this.$eventBus.$on('select-change', function () {
+          console.log('$on')
+        })
       }
     })
   </script>
+  <style scoped>
+    .custom-color {
+      color: red;
+    }
+  </style>
 </body>
 </html>

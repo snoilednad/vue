@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Build-in Component</title>
+</head>
+<body>
+    <div id="app"></div>
+    <script src="../../dist/vue.js"></script>
+    <script>
+        /**
+         * 测试：内置组件
+         * 1. <component>是否会被内存缓存？
+         * 2. 在什么情况下，生命周期父mounted会在子created前执行？
+              当子组件是异步加载的情况下，父子生命周期的执行顺序将不再遵循；
+         *    如：内置组件component :is="Fun"，Fun异步组件，则mounted会先与子created执行
+         * 
+         */
+        new Vue({
+            components: {
+                'CompA': {
+                    // template: '<div>Hello, CompA</div>',
+                    created () {
+                        console.warn('child created')
+                    },
+                    render: function (h) {
+                        return h('div', {
+                            attrs: {
+                                class: 'comp-a'
+                            }
+                        }, 'Hello, CompA')
+                    }
+                }
+            },
+            el: '#app',
+            data: {
+                isComponent: ''
+            },
+            template: `<component :is="isComponent"></component>`,
+            created() {
+                this.queryIsComponent().then((data) => {
+                    this.isComponent = data
+                })
+            },
+            mounted () {
+                console.warn('mounted')
+            },
+            methods: {
+                queryIsComponent: function () {
+                    return new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                            resolve('comp-a')
+                        }, 500)
+                    })
+                }
+            }
+        })
+    </script>
+</body>
+</html>

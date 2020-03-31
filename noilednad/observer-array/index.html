@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>source code test</title>
+</head>
+<body>
+  <div id="app">
+    <ul>
+      <li :key="week.id" v-for="week in weeks">
+        {{week.name + week.id}}
+      </li>
+    </ul>
+  </div>
+  <script src="../../dist/vue.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        weeks: [],
+      },
+      methods: {
+      },
+      created () {
+        this.weeks = [
+          {id: 1, name: '周一'},
+          {id: 2, name: '周二'},
+          {id: 3, name: '周三'},
+          {id: 4, name: '周四'},
+          {id: 5, name: '周五'},
+          {id: 6, name: '周六'},
+          {id: 7, name: '周日'}
+        ]
+        setTimeout(() => {
+            this.weeks[6].name = 'Sunday'
+        }, 1000)
+      }
+    })
+  </script>
+  <style scoped>
+  </style>
+</body>
+</html>

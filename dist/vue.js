@@ -1037,7 +1037,7 @@
     }
 
     var childOb = !shallow && observe(val);
-    Object.defineProperty(obj, key, {
+    Object.defineProperty(obj, key, { // 访问器，存在这4个特征
       enumerable: true,
       configurable: true,
       get: function reactiveGetter () { // 负责添加依赖
