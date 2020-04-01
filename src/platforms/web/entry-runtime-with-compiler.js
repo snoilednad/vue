@@ -15,6 +15,7 @@ const idToTemplate = cached(id => {
 })
 
 const mount = Vue.prototype.$mount
+// 扩展了$mount方法
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
@@ -31,7 +32,8 @@ Vue.prototype.$mount = function (
 
   const options = this.$options
   // resolve template/el and convert to render function
-  if (!options.render) { // 未配置render，说明render若存在，template和el配置则无效
+  // 未配置render，说明render若存在，template和el配置则无效
+  if (!options.render) {
     let template = options.template
     if (template) {
       if (typeof template === 'string') {
@@ -70,6 +72,7 @@ Vue.prototype.$mount = function (
         delimiters: options.delimiters,
         comments: options.comments
       }, this)
+      // 如果是template或el，则被编译成render函数
       options.render = render
       options.staticRenderFns = staticRenderFns
 

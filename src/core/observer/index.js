@@ -45,7 +45,8 @@ export class Observer {
     this.dep = new Dep()
     this.vmCount = 0
     def(value, '__ob__', this)
-    if (Array.isArray(value)) { // 数组
+    // 数组
+    if (Array.isArray(value)) {
       if (hasProto) {
         protoAugment(value, arrayMethods)
       } else {
@@ -143,6 +144,7 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  // 对应每一个响应式属性
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -158,11 +160,13 @@ export function defineReactive (
   }
 
   let childOb = !shallow && observe(val)
-  Object.defineProperty(obj, key, { // 访问器，存在这4个特征
+  // 访问器，存在这4个特征
+  Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
     get: function reactiveGetter () { // 负责添加依赖
       const value = getter ? getter.call(obj) : val
+      // Watcher
       if (Dep.target) {
         dep.depend()
         if (childOb) {

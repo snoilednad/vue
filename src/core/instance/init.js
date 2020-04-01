@@ -48,10 +48,16 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
+    // 初始化组件实例属性，如：$parent/$children/$root/$refs，及一些私有变量
     initLifecycle(vm)
     initEvents(vm)
-    initRender(vm) // $attrs、$listeners
+    initRender(vm)
     callHook(vm, 'beforeCreate') // 暴露beforeCreate钩子
+    /**
+     * injection为什么在provide之前初始化呢？
+     * 这里指的是在同一个组件内，必须先初始化injection获取到父传递的值，然后再初始化provide给子传值。
+     * 就是必须先拿到父值才能传给子。
+     */
     initInjections(vm) // resolve injections before data/props
     initState(vm)
     initProvide(vm) // resolve provide after data/props

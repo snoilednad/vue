@@ -5,15 +5,16 @@ import { eventsMixin } from './events'
 import { lifecycleMixin } from './lifecycle'
 import { warn } from '../util/index'
 
-// Vue构造函数定义
+// Vue构造函数
 function Vue (options) {
   if (process.env.NODE_ENV !== 'production' && !(this instanceof Vue)) {
     warn('Vue is a constructor and should be called with the `new` keyword')
   }
+  // 执行initMixin函数中定义的_init()初始化
+  // 若不定义，则不会执行
   this._init(options)
 }
 
-// 全局API定义
 initMixin(Vue)
 stateMixin(Vue)
 eventsMixin(Vue)

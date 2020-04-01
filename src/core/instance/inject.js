@@ -13,6 +13,11 @@ export function initProvide (vm: Component) {
   }
 }
 
+/**
+ * 初始化inject
+ * provide和inject绑定并不是响应式的
+ * @param {*} vm 
+ */
 export function initInjections (vm: Component) {
   const result = resolveInject(vm.$options.inject, vm)
   if (result) {
@@ -40,6 +45,7 @@ export function resolveInject (inject: any, vm: Component): ?Object {
   if (inject) {
     // inject is :any because flow is not smart enough to figure out cached
     const result = Object.create(null)
+    // key支持Symbol和Reflect.ownKeys
     const keys = hasSymbol
       ? Reflect.ownKeys(inject)
       : Object.keys(inject)

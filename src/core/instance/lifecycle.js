@@ -29,7 +29,7 @@ export function setActiveInstance(vm: Component) {
   }
 }
 
-// 初始化
+// 初始化组件实例属性
 export function initLifecycle (vm: Component) {
   const options = vm.$options
   // locate first non-abstract parent

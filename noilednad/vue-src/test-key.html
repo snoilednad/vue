@@ -6,8 +6,8 @@
 </head>
 <body>
   <div id="app">
-    <p :key="week.id" v-for="week in weeks">
-      {{week.name}}
+    <p :key="week.index" v-for="week in weeks">
+      {{week}}
     </p>
   </div>
   <script src="../../dist/vue.js"></script>
@@ -15,18 +15,14 @@
     new Vue({
       el: '#app',
       data: {
-        weeks: [
-          {id: 1, name: '周一'},
-          {id: 2, name: '周二'},
-          {id: 3, name: '周三'}
-        ]
+        weeks: [1, 2, 3]
       },
       created () {
         setTimeout(this.updateData, 2000)
       },
       methods: {
         updateData () {
-          this.weeks.splice(2, 1, {id: 4, name: 'Wednesday'})
+          // this.weeks.splice(2, 1, {id: 4, name: 'Wednesday'})
         }
       }
     })

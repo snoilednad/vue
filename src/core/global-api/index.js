@@ -18,8 +18,8 @@ import {
   defineReactive
 } from '../util/index'
 
+// 定义了全局API
 export function initGlobalAPI (Vue: GlobalAPI) {
-  // config
   const configDef = {}
   configDef.get = () => config
   if (process.env.NODE_ENV !== 'production') {

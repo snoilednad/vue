@@ -49,7 +49,6 @@ export function proxy (target: Object, sourceKey: string, key: string) {
  * 初始化响应化数据，包括：
  * props、data、computed和watch
  * 另：methods
- * 
  */
 export function initState (vm: Component) {
   vm._watchers = []
@@ -119,7 +118,11 @@ function initProps (vm: Component, propsOptions: Object) {
 // data数据响应式
 function initData (vm: Component) {
   let data = vm.$options.data
-  // data类型Object | Function
+  /**
+   * data类型Object | Function
+   * 除了在根组件，所有组件data需要使用函数定义，返回对象；
+   * 因为如果都使用对象，会造成覆盖或全局污染
+   */
   data = vm._data = (typeof data === 'function' ? getData(data, vm) : data || {})
   if (!isPlainObject(data)) {
     data = {}
