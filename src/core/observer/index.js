@@ -117,6 +117,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     return
   }
   let ob: Observer | void
+  // 如果data属性已经响应式，则直接返回
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
@@ -126,6 +127,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
     Object.isExtensible(value) &&
     !value._isVue
   ) {
+    // 否则返回响应式对象
     ob = new Observer(value)
   }
   if (asRootData && ob) {
@@ -164,11 +166,13 @@ export function defineReactive (
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
-    get: function reactiveGetter () { // 负责添加依赖
+    get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
       // Watcher
+      // 执行依赖收集
       if (Dep.target) {
         dep.depend()
+        // 针对深层对象依赖收集
         if (childOb) {
           childOb.dep.depend()
           if (Array.isArray(value)) {
@@ -196,7 +200,8 @@ export function defineReactive (
         val = newVal
       }
       childOb = !shallow && observe(newVal)
-      dep.notify() // 通知更新
+      // 通知更新
+      dep.notify()
     }
   })
 }

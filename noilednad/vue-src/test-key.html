@@ -6,23 +6,21 @@
 </head>
 <body>
   <div id="app">
-    <p :key="week.index" v-for="week in weeks">
-      {{week}}
-    </p>
+    <p>{{feat}}</p>
   </div>
   <script src="../../dist/vue.js"></script>
   <script>
     new Vue({
       el: '#app',
       data: {
-        weeks: [1, 2, 3]
+        feat: ''
       },
       created () {
         setTimeout(this.updateData, 2000)
       },
       methods: {
         updateData () {
-          // this.weeks.splice(2, 1, {id: 4, name: 'Wednesday'})
+          this.feat = 100
         }
       }
     })

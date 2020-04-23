@@ -113,6 +113,7 @@ export default class Watcher {
    */
   addDep (dep: Dep) {
     const id = dep.id
+    // 在新增依赖数组判断，为什么要设计一个新增依赖数组呢？
     if (!this.newDepIds.has(id)) {
       this.newDepIds.add(id)
       this.newDeps.push(dep)
