@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>update data</title>
+</head>
+<body>
+  <div id="app">
+    <p>{{feat}}</p>
+  </div>
+  <script src="../../../../dist/vue.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        feat: ''
+      },
+      created () {
+        setTimeout(this.updateData, 1000)
+      },
+      methods: {
+        updateData () {
+          this.feat = 'update data'
+        }
+      }
+    })
+  </script>
+  <style scoped>
+  </style>
+</body>
+</html>
